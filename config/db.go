@@ -4,6 +4,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"goweb01/global"
+	"goweb01/models"
 	"log"
 	"time"
 )
@@ -17,13 +18,17 @@ func InitDB() {
 	}
 
 	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+		return
+	}
 
 	sqlDB.SetMaxIdleConns(AppConfig.Database.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(AppConfig.Database.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	if err != nil {
-		log.Fatalf("Failed to configure database: %v", err)
+	if err := db.AutoMigrate(&models.ExchangeRate{}); err != nil {
+		log.Fatalf("Failed to migrate ExchangeRate model: %v", err)
 	}
 
 	global.Db = db
