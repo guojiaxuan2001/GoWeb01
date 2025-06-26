@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-func LikeArticle(c *gin.Context) {
-	articleID := c.Param("id")
+func LikeArticle(ctx *gin.Context) {
+	articleID := ctx.Param("id")
 
 	likeKey := "article:" + articleID + ":likes"
 
@@ -21,8 +21,8 @@ func LikeArticle(c *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "successfully liked article"})
 }
 
-func GetArticleLikes(c *gin.Context) {
-	articleID := c.Param("id")
+func GetArticleLikes(ctx *gin.Context) {
+	articleID := ctx.Param("id")
 
 	likeKey := "article:" + articleID + ":likes"
 
