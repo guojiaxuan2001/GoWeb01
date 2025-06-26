@@ -34,7 +34,11 @@ func GetAllArticles(ctx *gin.Context) {
 	var articles []models.Article
 
 	if err := global.Db.Find(&articles).Error; err != nil { //相当于SELECT * FROM Article;
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err})
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		}
 		return
 	}
 
